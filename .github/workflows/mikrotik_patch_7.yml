@@ -22,6 +22,7 @@ on:
         type: choice
         options:
           - stable
+          - long-term
           - testing
       version:
         description: "Specify version (e.g., 7.19.2), empty for latest"
@@ -87,7 +88,7 @@ jobs:
             BUILD_TIME=$(date +'%s')
             RELEASE=true
             MATRIX_JSON='[{"arch":"x86","channel":"stable"},{"arch":"arm64","channel":"stable"},{"arch":"arm","channel":"stable"},{"arch":"x86","channel":"testing"},{"arch":"arm64","channel":"testing"},{"arch":"arm","channel":"testing"}]'
-            MATRIX_JSON='[{"arch":"x86","channel":"stable"},{"arch":"arm64","channel":"stable"},{"arch":"x86","channel":"testing"},{"arch":"arm64","channel":"testing"}]'
+            MATRIX_JSON='[{"arch":"x86","channel":"stable"},{"arch":"arm64","channel":"stable"},{"arch":"x86","channel":"long-term"},{"arch":"arm64","channel":"long-term"},{"arch":"x86","channel":"testing"},{"arch":"arm64","channel":"testing"}]'
           fi
           echo "BUILD_TIME=$BUILD_TIME" >> $GITHUB_OUTPUT
           echo "RELEASE=$RELEASE" >> $GITHUB_OUTPUT
@@ -190,11 +191,11 @@ jobs:
         sudo mksquashfs option-root option.sfs -quiet -comp xz -no-xattrs -b 256k
         sudo rm -rf option-root
         if [ "${{ matrix.arch }}" == "x86" ]; then
-          sudo wget -O cpython.tar.gz -nv https://github.com/indygreg/python-build-standalone/releases/download/20250708/cpython-3.11.13+20250708-x86_64-unknown-linux-musl-install_only_stripped.tar.gz
+          sudo wget -O cpython.tar.gz -nv https://github.com/astral-sh/python-build-standalone/releases/download/20241206/cpython-3.11.11+20241206-x86_64-unknown-linux-musl-install_only_stripped.tar.gz
         elif [ "${{ matrix.arch }}" == "arm64" ]; then
-          sudo wget -O cpython.tar.gz -nv https://github.com/indygreg/python-build-standalone/releases/download/20250708/cpython-3.11.13+20250708-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz
+          sudo wget -O cpython.tar.gz -nv https://github.com/indygreg/python-build-standalone/releases/download/20241206/cpython-3.11.11+20241206-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz
         elif [ "${{ matrix.arch }}" == "arm" ]; then
-          sudo wget -O cpython.tar.gz -nv https://github.com/indygreg/python-build-standalone/releases/download/20250708/cpython-3.11.13+20250708-armv7-unknown-linux-gnueabi-install_only_stripped.tar.gz
+          sudo wget -O cpython.tar.gz -nv https://github.com/indygreg/python-build-standalone/releases/download/20241206/cpython-3.11.11+20241206-armv7-unknown-linux-gnueabi-install_only_stripped.tar.gz
         fi
         sudo tar -xf cpython.tar.gz
         sudo rm cpython.tar.gz
@@ -414,7 +415,7 @@ jobs:
             </VirtualHardwareSection>
             <AnnotationSection ovf:required="false">
               <Info>A human-readable annotation</Info>
-              <Annotation>MikroTik RouterOS CHR v7.19.4</Annotation>
+              <Annotation>MikroTik RouterOS CHR</Annotation>
             </AnnotationSection>
           </VirtualSystem>
         </Envelope>' 
